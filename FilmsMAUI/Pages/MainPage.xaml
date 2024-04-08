@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FilmsMAUI.Pages.MainPage"
+             Title="MainPage">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" x:Key="MenuLabel">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Margin="0"
+          Padding="0">
+        <ScrollView Background="Black">
+            <VerticalStackLayout>
+                <Grid HeightRequest="500">
+                    <Image Aspect="Center"
+                           HeightRequest="350"
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+    
+</ContentPage>
