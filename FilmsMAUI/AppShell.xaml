@@ -10,22 +10,22 @@
         <ShellContent
             Title="Home"
             Icon="home"
-            ContentTemplate="{DataTemplate local:MainPage}"
+            ContentTemplate="{DataTemplate local:Pages.MainPage}"
             Route="MainPage" />        
         <ShellContent
             Title="Games"
             Icon="game"
-            ContentTemplate="{DataTemplate local:MainPage}"
+            ContentTemplate="{DataTemplate local:Pages.MainPage}"
             Route="MainPage1" />        
         <ShellContent
             Title="New &amp; Hot"
             Icon="brand_netflix"
-            ContentTemplate="{DataTemplate local:MainPage}"
+            ContentTemplate="{DataTemplate local:Pages.MainPage}"
             Route="MainPage2" />        
         <ShellContent
             Title="Downloads"
             Icon="download"
-            ContentTemplate="{DataTemplate local:MainPage}"
+            ContentTemplate="{DataTemplate local:Pages.MainPage}"
             Route="MainPage3" />        
     </TabBar>
 </Shell>

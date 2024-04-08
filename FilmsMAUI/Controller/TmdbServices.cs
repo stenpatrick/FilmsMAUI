@@ -21,12 +21,23 @@ namespace FilmsMAUI.Controller
         }
 
         private HttpClient HttpClient => _httpClientFactory.CreateClient(TmdbHttpClientName);
-        public async Task<IEnumerable<Media>> GetTrendingAsync()
+        public async Task<IEnumerable<Media>> GetTrendingAsync() =>
+            await GetMediasAsync(TmdbUrls.Trending);
+        public async Task<IEnumerable<Media>> GetTopRatedAsync() =>
+        await GetMediasAsync(TmdbUrls.TopRated);
+        public async Task<IEnumerable<Media>> GetNetflixOriginalAsync() =>
+        await GetMediasAsync(TmdbUrls.NetflixOriginals);
+        public async Task<IEnumerable<Media>> GetActionAsync() =>
+        await GetMediasAsync(TmdbUrls.Action);
+
+        public async Task<IEnumerable<Media>> GetMediasAsync(string url)
         {
-            var trendingMoviesCollections = await HttpClient.GetFromJsonAsync<Movie>($"{TmdbUrls.Trending}&api_key={ApiKey}");
+            var trendingMoviesCollections = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={ApiKey}");
             return trendingMoviesCollections.results
                 .Select(r => r.ToMediaObject());
+
         }
+
     }
     public static class TmdbUrls
     {
