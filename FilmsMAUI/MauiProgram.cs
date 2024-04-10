@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
-using FilmsMAUI.Controller;
-using FilmsMAUI.Pages;
-using FilmsMAUI.ViewModels;
 using Microsoft.Extensions.Logging;
+using FilmsMAUI.Pages;
+using FilmsMAUI.Services;
+using FilmsMAUI.ViewModels;
 
 namespace FilmsMAUI;
 
@@ -13,18 +13,24 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("Poppins-Regular.ttf", "PoppinsRegular");
 				fonts.AddFont("Poppins-Semibold.ttf", "PoppinsSemibold");
 			});
-		builder.Services.AddHttpClient(Controller.TmdbServices.TmdbHttpClientName,
-			HttpClient => HttpClient.BaseAddress = new Uri("https://api.themoviedb.org"));
-		builder.Services.AddSingleton<TmdbServices>();
+
+#if DEBUG
+		builder.Logging.AddDebug();
+#endif
+
+		builder.Services.AddHttpClient(TmdbService.TmdbHttpClientName,
+			httpClient => httpClient.BaseAddress = new Uri("https://api.themoviedb.org"));
+
+		builder.Services.AddSingleton<TmdbService>();
 		builder.Services.AddSingleton<HomeViewModel>();
 		builder.Services.AddSingleton<MainPage>();
-		return builder.Build();
 
+		return builder.Build();
 	}
 }

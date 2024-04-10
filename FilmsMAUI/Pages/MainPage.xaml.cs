@@ -1,20 +1,31 @@
-using FilmsMAUI.Controller;
+﻿using FilmsMAUI.ViewModels;
 
 namespace FilmsMAUI.Pages;
 
 public partial class MainPage : ContentPage
 {
-	private readonly TmdbServices _tmdbServices;
-	int count = 0;
-
-	public MainPage(TmdbServices tmdbServices)
+    private readonly HomeViewModel _homeViewModel;
+	public MainPage(HomeViewModel homeViewModel)
 	{
 		InitializeComponent();
-		_tmdbServices = tmdbServices;
-	}
+        _homeViewModel = homeViewModel;
+		BindingContext = _homeViewModel;
+    }
+
     protected async override void OnAppearing()
     {
         base.OnAppearing();
-		var trending = await _tmdbServices.GetTrendingAsync();
+		await _homeViewModel.InitializeAsync();
+    }
+
+    private void MovieRow_MediaSelected(object sender, Controls.MediaSelectEventArgs e)
+    {
+        _homeViewModel.SelectMediaCommand.Execute(e.Media);
+    }
+
+    private void MovieInfoBox_Closed(object sender, EventArgs e)
+    {
+        _homeViewModel.SelectMediaCommand.Execute(null);
     }
 }
+

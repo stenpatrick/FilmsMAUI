@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FilmsMAUI.Models
+﻿namespace FilmsMAUI.Models
 {
     public class Media
     {
@@ -18,7 +12,5 @@ namespace FilmsMAUI.Models
 
         public string Overview { get; set; }
         public string ReleaseDate { get; set; }
-
-        public string TrailerURL { get; set; }
     }
 }

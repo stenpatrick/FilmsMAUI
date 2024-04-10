@@ -6,38 +6,37 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FilmsMAUI.Controller
+namespace FilmsMAUI.Services
 {
-    public class TmdbServices
+    public partial class TmdbService
     {
-        private const string ApiKey = "";
         public const string TmdbHttpClientName = "TmdbClient";
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public TmdbServices(IHttpClientFactory httpClientFactory)
+        public TmdbService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
         private HttpClient HttpClient => _httpClientFactory.CreateClient(TmdbHttpClientName);
+
         public async Task<IEnumerable<Media>> GetTrendingAsync() =>
             await GetMediasAsync(TmdbUrls.Trending);
+
         public async Task<IEnumerable<Media>> GetTopRatedAsync() =>
-        await GetMediasAsync(TmdbUrls.TopRated);
+            await GetMediasAsync(TmdbUrls.TopRated);
         public async Task<IEnumerable<Media>> GetNetflixOriginalAsync() =>
-        await GetMediasAsync(TmdbUrls.NetflixOriginals);
+            await GetMediasAsync(TmdbUrls.NetflixOriginals);
         public async Task<IEnumerable<Media>> GetActionAsync() =>
-        await GetMediasAsync(TmdbUrls.Action);
+            await GetMediasAsync(TmdbUrls.Action);
 
-        public async Task<IEnumerable<Media>> GetMediasAsync(string url)
+        private async Task<IEnumerable<Media>> GetMediasAsync(string url)
         {
-            var trendingMoviesCollections = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={ApiKey}");
-            return trendingMoviesCollections.results
-                .Select(r => r.ToMediaObject());
-
+            var trendingMoviesCollection = await HttpClient.GetFromJsonAsync<Movie>($"{url}&api_key={ApiKey}");
+            return trendingMoviesCollection.results
+                    .Select(r => r.ToMediaObject());
         }
-
     }
     public static class TmdbUrls
     {
@@ -45,7 +44,6 @@ namespace FilmsMAUI.Controller
         public const string NetflixOriginals = "3/discover/tv?language=en-US&with_networks=213";
         public const string TopRated = "3/movie/top_rated?language=en-US";
         public const string Action = "3/discover/movie?language=en-US&with_genres=28";
-        public const string MovieGenres = "3/genre/movie/list?language=en-US";
 
         public static string GetTrailers(int movieId, string type = "movie") => $"3/{type ?? "movie"}/{movieId}/videos?language=en-US";
         public static string GetMovieDetails(int movieId, string type = "movie") => $"3/{type ?? "movie"}/{movieId}?language=en-US";
@@ -73,7 +71,7 @@ namespace FilmsMAUI.Controller
         public string title { get; set; }
         public string name { get; set; }
         public bool video { get; set; }
-        public string media_type { get; set; } // "movie" or "tv"
+        public string media_type { get; set; }
         public string ThumbnailPath => poster_path ?? backdrop_path;
         public string Thumbnail => $"https://image.tmdb.org/t/p/w600_and_h900_bestv2/{ThumbnailPath}";
         public string ThumbnailSmall => $"https://image.tmdb.org/t/p/w220_and_h330_face/{ThumbnailPath}";
@@ -81,18 +79,19 @@ namespace FilmsMAUI.Controller
         public string DisplayTitle => title ?? name ?? original_title ?? original_name;
 
         public Media ToMediaObject() =>
-                    new()
-                    {
-                        Id = id,
-                        DisplayTitle = DisplayTitle,
-                        MediaType = media_type,
-                        Overview = overview,
-                        ReleaseDate = release_date,
-                        Thumbnail = Thumbnail,
-                        ThumbnailSmall = ThumbnailSmall,
-                        ThumbnailUrl = ThumbnailUrl
-                    };
+            new ()
+            {
+                Id = id,
+                DisplayTitle = DisplayTitle,
+                MediaType = media_type,
+                Overview = overview,
+                ReleaseDate = release_date,
+                Thumbnail = Thumbnail,
+                ThumbnailSmall = ThumbnailSmall,
+                ThumbnailUrl = ThumbnailUrl
+            };
     }
+
 
     public class VideosWrapper
     {
