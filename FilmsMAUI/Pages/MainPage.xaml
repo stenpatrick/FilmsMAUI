@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FilmsMAUI.Pages.MainPage"
              Shell.NavBarIsVisible="False"
@@ -18,7 +17,7 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    
+
     <Grid Margin="0"
           Padding="0">
         <ScrollView BackgroundColor="Black">
@@ -47,14 +46,18 @@
                             <Label Text="Movies"
                                    Style="{StaticResource MenuLabel}"/>
                             <Label Text="Categories"
-                                   Style="{StaticResource MenuLabel}"/>
+                                   Style="{StaticResource MenuLabel}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="CategoriesMenu_Tapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
                         </FlexLayout>
                     </Grid>
 
                     <HorizontalStackLayout VerticalOptions="End"
                                            HorizontalOptions="Center"
                                            Spacing="50">
-                        
+
                         <VerticalStackLayout>
                             <Label Text="+"
                                    HorizontalTextAlignment="Center"
@@ -100,9 +103,9 @@
                                                   CommandParameter="{Binding TrendingMovie}"/>
                             </VerticalStackLayout.GestureRecognizers>
                         </VerticalStackLayout>
-                        
+
                     </HorizontalStackLayout>
-                    
+
                 </Grid>
 
                 <controls:MovieRow Heading="Top Rated" 

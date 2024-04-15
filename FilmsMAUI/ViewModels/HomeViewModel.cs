@@ -71,9 +71,9 @@ namespace FilmsMAUI.ViewModels
         [RelayCommand]
         private void SelectMedia(Media? media = null)
         {
-            if(media is not null)
+            if (media is not null)
             {
-                if(media.Id == SelectedMedia?.Id)
+                if (media.Id == SelectedMedia?.Id)
                 {
                     media = null;
                 }

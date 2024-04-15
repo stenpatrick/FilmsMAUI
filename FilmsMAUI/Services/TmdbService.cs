@@ -21,6 +21,12 @@ namespace FilmsMAUI.Services
 
         private HttpClient HttpClient => _httpClientFactory.CreateClient(TmdbHttpClientName);
 
+        public async Task<IEnumerable<Genre>> GetGenresAsync()
+        {
+            var genresWrapper = await HttpClient.GetFromJsonAsync<GenreWrapper>($"{TmdbUrls.MovieGenres}&api_key={ApiKey}");
+            return genresWrapper.Genres;
+        }
+
         public async Task<IEnumerable<Media>> GetTrendingAsync() =>
             await GetMediasAsync(TmdbUrls.Trending);
 
@@ -44,6 +50,7 @@ namespace FilmsMAUI.Services
         public const string NetflixOriginals = "3/discover/tv?language=en-US&with_networks=213";
         public const string TopRated = "3/movie/top_rated?language=en-US";
         public const string Action = "3/discover/movie?language=en-US&with_genres=28";
+        public const string MovieGenres = "3/genre/movie/list?language=en-US";
 
         public static string GetTrailers(int movieId, string type = "movie") => $"3/{type ?? "movie"}/{movieId}/videos?language=en-US";
         public static string GetMovieDetails(int movieId, string type = "movie") => $"3/{type ?? "movie"}/{movieId}?language=en-US";
@@ -71,7 +78,7 @@ namespace FilmsMAUI.Services
         public string title { get; set; }
         public string name { get; set; }
         public bool video { get; set; }
-        public string media_type { get; set; }
+        public string media_type { get; set; } // "movie" or "tv"
         public string ThumbnailPath => poster_path ?? backdrop_path;
         public string Thumbnail => $"https://image.tmdb.org/t/p/w600_and_h900_bestv2/{ThumbnailPath}";
         public string ThumbnailSmall => $"https://image.tmdb.org/t/p/w220_and_h330_face/{ThumbnailPath}";
@@ -79,7 +86,7 @@ namespace FilmsMAUI.Services
         public string DisplayTitle => title ?? name ?? original_title ?? original_name;
 
         public Media ToMediaObject() =>
-            new ()
+            new()
             {
                 Id = id,
                 DisplayTitle = DisplayTitle,
