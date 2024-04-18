@@ -10,6 +10,7 @@ namespace FilmsMAUI.Services
 {
     public partial class TmdbService
     {
+        private const string ApiKey = "";
         public const string TmdbHttpClientName = "TmdbClient";
 
         private readonly IHttpClientFactory _httpClientFactory;
@@ -25,7 +26,7 @@ namespace FilmsMAUI.Services
         {
             var genresWrapper = await HttpClient.GetFromJsonAsync<GenreWrapper>($"{TmdbUrls.MovieGenres}&api_key={ApiKey}");
             return genresWrapper.Genres;
-        }
+        }   
 
         public async Task<IEnumerable<Media>> GetTrendingAsync() =>
             await GetMediasAsync(TmdbUrls.Trending);
@@ -36,6 +37,23 @@ namespace FilmsMAUI.Services
             await GetMediasAsync(TmdbUrls.NetflixOriginals);
         public async Task<IEnumerable<Media>> GetActionAsync() =>
             await GetMediasAsync(TmdbUrls.Action);
+
+        public async Task<IEnumerable<Video>?> GetTrailersAsync(int id, string type = "movie")
+        {
+            var videosWrapper = await HttpClient.GetFromJsonAsync<VideosWrapper>(
+                $"{TmdbUrls.GetTrailers(id, type)}&api_key={ApiKey}");
+
+            if(videosWrapper?.results?.Length > 0)
+            {
+                var trailerTeasers = videosWrapper.results.Where(VideosWrapper.FilterTrailerTeasers);
+                return trailerTeasers;
+            }
+            return null;
+        }
+
+        public async Task<MovieDetail> GetMediaDetailsAsync(int id, string type = "movie") =>
+            await HttpClient.GetFromJsonAsync<MovieDetail>(
+                $"{TmdbUrls.GetMovieDetails(id, type)}&api_key={ApiKey}");
 
         private async Task<IEnumerable<Media>> GetMediasAsync(string url)
         {
@@ -86,7 +104,7 @@ namespace FilmsMAUI.Services
         public string DisplayTitle => title ?? name ?? original_title ?? original_name;
 
         public Media ToMediaObject() =>
-            new()
+            new ()
             {
                 Id = id,
                 DisplayTitle = DisplayTitle,

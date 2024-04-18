@@ -5,17 +5,17 @@ namespace FilmsMAUI.Pages;
 public partial class MainPage : ContentPage
 {
     private readonly HomeViewModel _homeViewModel;
-    public MainPage(HomeViewModel homeViewModel)
-    {
-        InitializeComponent();
+	public MainPage(HomeViewModel homeViewModel)
+	{
+		InitializeComponent();
         _homeViewModel = homeViewModel;
-        BindingContext = _homeViewModel;
+		BindingContext = _homeViewModel;
     }
 
     protected async override void OnAppearing()
     {
         base.OnAppearing();
-        await _homeViewModel.InitializeAsync();
+		await _homeViewModel.InitializeAsync();
     }
 
     private void MovieRow_MediaSelected(object sender, Controls.MediaSelectEventArgs e)
@@ -33,3 +33,4 @@ public partial class MainPage : ContentPage
         await Shell.Current.GoToAsync(nameof(CategoriesPage));
     }
 }
+
