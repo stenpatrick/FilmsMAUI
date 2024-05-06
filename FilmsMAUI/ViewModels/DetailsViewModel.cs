@@ -28,7 +28,7 @@ namespace FilmsMAUI.ViewModels
 
         [ObservableProperty]
         private bool _isBusy;
-       
+
         [ObservableProperty]
         private int _similarItemWidth = 125;
 
@@ -69,13 +69,13 @@ namespace FilmsMAUI.ViewModels
             }
             finally
             {
-                IsBusy = false; 
+                IsBusy = false;
             }
 
-            var similiarMedias = await similarMediasTask;
-            if(similiarMedias?.Any() == true)
+            var similarMedias = await similarMediasTask;
+            if (similarMedias?.Any() == true)
             {
-                foreach (var media in similiarMedias)
+                foreach (var media in similarMedias)
                 {
                     Similar.Add(media);
                 }
@@ -87,10 +87,14 @@ namespace FilmsMAUI.ViewModels
         {
             var parameters = new Dictionary<string, object>
             {
-                [nameof(DetailsViewModel.Media)] = Media
+                [nameof(DetailsViewModel.Media)] = media
             };
             await Shell.Current.GoToAsync(nameof(DetailsPage), true, parameters);
         }
+
+        [RelayCommand]
+        private void SetMainTrailer(string videoKey) =>
+            MainTrailerUrl = GenerateYoutubeUrl(videoKey);
 
         private static string GenerateYoutubeUrl(string videoKey) =>
             $"https://www.youtube.com/embed/{videoKey}";
