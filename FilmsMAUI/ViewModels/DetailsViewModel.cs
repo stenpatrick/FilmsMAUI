@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FilmsMAUI.Models;
+using FilmsMAUI.Pages;
 using FilmsMAUI.Services;
 using System.Collections.ObjectModel;
 
@@ -26,11 +28,16 @@ namespace FilmsMAUI.ViewModels
 
         [ObservableProperty]
         private bool _isBusy;
+       
+        [ObservableProperty]
+        private int _similarItemWidth = 125;
 
         public ObservableCollection<Video> Videos { get; set; } = new();
+        public ObservableCollection<Media> Similar { get; set; } = new();
 
         public async Task InitializeAsync()
         {
+            var similarMediasTask = _tmdbService.GetSimilarAsync(Media.Id, Media.MediaType);
             IsBusy = true;
             try
             {
@@ -64,6 +71,25 @@ namespace FilmsMAUI.ViewModels
             {
                 IsBusy = false; 
             }
+
+            var similiarMedias = await similarMediasTask;
+            if(similiarMedias?.Any() == true)
+            {
+                foreach (var media in similiarMedias)
+                {
+                    Similar.Add(media);
+                }
+            }
+        }
+
+        [RelayCommand]
+        private async Task ChangeToThisMedia(Media media)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                [nameof(DetailsViewModel.Media)] = Media
+            };
+            await Shell.Current.GoToAsync(nameof(DetailsPage), true, parameters);
         }
 
         private static string GenerateYoutubeUrl(string videoKey) =>
